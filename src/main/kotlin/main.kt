@@ -2,8 +2,8 @@ fun main() {
     val amound = 1_000_000
     val komisia = amound * 0.75 / 100
     if (komisia > 35) println("$komisia рублей") else println("35 рублей")
-    val likes = 33
-    println("Понравились $likes человеку")
+    val likes = 1
+    if (likes == 1) println("Понравились $likes человеку") else println("Понравились $likes людям")
 
     fun calculateDiscount(purchaseAmount: Int, isRegularCustomer: Boolean): Int {
         var discount = 0
@@ -12,23 +12,26 @@ fun main() {
         if (totalAmount > 1000) {
             if (totalAmount <= 10000) {
                 discount = 100
+                println("Скидка 100 рублей")
             } else {
                 discount = (totalAmount * 0.05).toInt()
+            println("Скидка 5% ")
             }
 
-            if (isRegularCustomer) {
-                val extraDiscount = (totalAmount * 0.01).toInt()
-                discount = (discount * (1 - extraDiscount / 100.0)).toInt()
-            }
+        }
+        if (isRegularCustomer) {
+            val extraDiscount = ((totalAmount * 1) / 100).toInt()
+            discount = discount + extraDiscount
+            println("Постояному клиенту скидка 1% $extraDiscount")
         }
 
         return discount
     }
 
-    val purchaseAmount = 5000
-    val isRegularCustomer = false
+    val purchaseAmount = 600
+    val isRegularCustomer = true
     val discount = calculateDiscount(purchaseAmount, isRegularCustomer)
-    println("Сумма скидки: $discount рублей")
+    println("Общая сумма скидки: $discount рублей")
 
 
 }
