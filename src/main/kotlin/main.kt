@@ -2,8 +2,10 @@ fun main() {
     val amound = 1_000_000
     val komisia = amound * 0.75 / 100
     if (komisia > 35) println("$komisia рублей") else println("35 рублей")
-    val likes = 1
-    if (likes == 1) println("Понравились $likes человеку") else println("Понравились $likes людям")
+    val likes = 6011
+    val people2 = likes % 100
+    val people = likes % 10
+    if ( people == 1 && people2 == 1) println("Понравились $likes человеку") else println("Понравились $likes людям")
 
     fun calculateDiscount(purchaseAmount: Int, isRegularCustomer: Boolean): Int {
         var discount = 0
