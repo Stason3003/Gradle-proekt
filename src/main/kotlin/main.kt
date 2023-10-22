@@ -9,33 +9,34 @@ fun main() {
         var discount = 0
         var totalAmount = purchaseAmount.toDouble()
 
-        if (totalAmount > 1000) {
+        if (totalAmount > 1000){
             if (totalAmount <= 10000) {
                 discount = 100
                 println("Скидка 100 рублей")
-            } else {
-                discount = (totalAmount * 0.05).toInt()
-            println("Скидка 5% ")
-            }
-
+            } else{
+                    discount = (totalAmount * 0.05).toInt()
+                    println("Скидка 5% ")
+                }
+                totalAmount = totalAmount - discount.toDouble()
         }
+
         if (isRegularCustomer) {
             val extraDiscount = ((totalAmount * 1) / 100).toInt()
             discount = discount + extraDiscount
-            println("Постояному клиенту скидка 1% $extraDiscount")
+            println("Постояному клиенту скидка 1%: $extraDiscount рублей")
         }
 
         return discount
-    }
 
-    val purchaseAmount = 600
-    val isRegularCustomer = true
-    val discount = calculateDiscount(purchaseAmount, isRegularCustomer)
-    println("Общая сумма скидки: $discount рублей")
+    }
+        val purchaseAmount = 6000
+        val isRegularCustomer = true
+        val discount = calculateDiscount(purchaseAmount, isRegularCustomer)
+        println("Общая сумма скидки: $discount рублей")
+
 
 
 }
-
 
 
 
