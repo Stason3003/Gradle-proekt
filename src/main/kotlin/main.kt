@@ -4,12 +4,15 @@ fun main() {
     println(result)
 
     val cardType = "MasterCard"
-    val previousTransfers = 200.0
+    val previousTransfers = 2000.0
     val transferAmount = 500.0
 
     val commission = calculateCommission(cardType, previousTransfers, transferAmount)
-    println("Commission: $commission рублей")
-
+    if (commission >= 0) {
+        println("Комиссия: $commission рублей")
+    } else {
+        println("Произошла ошибка при расчете комиссии!")
+    }
 }
 
 fun agoToText(timeSecond: Int) = when {
@@ -25,7 +28,7 @@ fun agoToText(timeSecond: Int) = when {
 
 fun minutAgo(minut: Int) = when {
     minut in 5..20 || minut % 10 in 5..9 || minut % 10 == 0 -> "$minut минут назат "
-    minut % 10 == 0 -> "$minut минуту назад"
+    minut % 10 == 1 -> "$minut минуту назад"
     minut % 10 in 2..4 -> "$minut минуты назад"
     else -> ""
 }
@@ -42,12 +45,27 @@ fun calculateCommission(
     previousTransfers: Double = 0.0,
     transferAmount: Double
 ): Double {
-    var commission = 0.0
+    val monthlyLimit = 75000.0
+    val singleLimit = 3000.0
 
-    if (cardType == "MasterCard" || cardType == "Maestro") {
-        if (previousTransfers + transferAmount > 300) {
-            commission = transferAmount * 0.6 / 100
+    val commissionRate = when (cardType) {
+        "MasterCard", "Maestro" -> {
+            if (previousTransfers + transferAmount < monthlyLimit) {
+                0.6
+            } else {
+                0.0
+            }
         }
+        else -> 0.0
+    }
+
+    val commission = transferAmount * commissionRate
+    val totalAmount = transferAmount + commission
+
+    if (totalAmount > singleLimit) {
+
+        println("Превышен лимит на операцию!")
+        return -1.0
     }
 
     return commission
