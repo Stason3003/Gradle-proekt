@@ -2,17 +2,9 @@ fun main() {
     val timeSecond = 30000;
     val result = agoToText(timeSecond)
     println(result)
+    val commission = calculateCommission("MasterCard", 50000, 1000)
+    println("Комиссия: $commission рублей")
 
-    val cardType = "MasterCard"
-    val previousTransfers = 2000.0
-    val transferAmount = 500.0
-
-    val commission = calculateCommission(cardType, previousTransfers, transferAmount)
-    if (commission >= 0) {
-        println("Комиссия: $commission рублей")
-    } else {
-        println("Произошла ошибка при расчете комиссии!")
-    }
 }
 
 fun agoToText(timeSecond: Int) = when {
@@ -39,36 +31,35 @@ fun hourAgo(hour: Int) = when {
     hour % 10 in 2..4 -> "$hour часа назад"
     else -> ""
 }
-
 fun calculateCommission(
-    cardType: String = "VK Pay",
-    previousTransfers: Double = 0.0,
-    transferAmount: Double
+    accountType: String = "VK Pay",
+    previousTransfers: Int = 0,
+    transferAmount: Int
 ): Double {
-    val monthlyLimit = 75000.0
-    val singleLimit = 3000.0
+    val mastercardMaestroMinLimit = 300
+    val mastercardMaestroMaxLimit = 75000
+    val mastercardMaestroCommissionRate = 0.6
+    val mastercardMaestroFixedFee = 20
 
-    val commissionRate = when (cardType) {
+    val visaMirCommissionRate = 0.75
+    val visaMirMinFee = 35
+
+    val vkPayMaxTransferAmount = 15000
+    val vkPayMonthlyLimit = 40000
+
+    val commission: Double = when (accountType) {
         "MasterCard", "Maestro" -> {
-            if (previousTransfers + transferAmount < monthlyLimit) {
-                0.6
-            } else {
+            if (previousTransfers >= mastercardMaestroMinLimit && previousTransfers <= mastercardMaestroMaxLimit) {
                 0.0
+            } else {
+                (mastercardMaestroCommissionRate / 100.0) * transferAmount + mastercardMaestroFixedFee
             }
         }
+        "Visa", "Мир" -> (visaMirCommissionRate / 100.0) * transferAmount.coerceAtLeast(visaMirMinFee)
+        "VK Pay" -> 0.0
         else -> 0.0
-    }
-
-    val commission = transferAmount * commissionRate
-    val totalAmount = transferAmount + commission
-
-    if (totalAmount > singleLimit) {
-
-        println("Превышен лимит на операцию!")
-        return -1.0
     }
 
     return commission
 }
-
 
